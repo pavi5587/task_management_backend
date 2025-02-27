@@ -40,13 +40,19 @@ router.get("/search", authenticateToken, async (req, res) => {
     const skip = (page - 1) * limit;
 
     const tasks = await Task.find({
-      name: { $regex: query, $options: "i" },
+      $or: [
+        { name: { $regex: query, $options: "i" } },
+        { status: { $regex: query, $options: "i" } },
+      ],
     })
       .skip(skip)
       .limit(limit);
 
     const totalTask = await Task.countDocuments({
-      name: { $regex: query, $options: "i" },
+      $or: [
+        { name: { $regex: query, $options: "i" } },
+        { status: { $regex: query, $options: "i" } },
+      ],
     });
 
     res.json({
