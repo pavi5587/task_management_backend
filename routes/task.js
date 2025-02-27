@@ -87,6 +87,12 @@ router.post("/", authenticateToken, async (req, res) => {
     const formattedStartDate = moment(startDate, "DD/MM/YYYY").toDate();
     const formattedEndDate = moment(endDate, "DD/MM/YYYY").toDate();
 
+    if (formattedStartDate > formattedEndDate) {
+      return res.status(400).json({
+        message: "Start date cannot be greater than end date.",
+      });
+    }
+    
     const task = new Task({
       ...req.body,
       startDate: formattedStartDate,
